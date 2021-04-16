@@ -2,7 +2,6 @@ import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +32,7 @@ const Footer = () => {
         <span style={{ display: "inline-block" }}>
           <FavoriteIcon
             style={{
-              color: "#4caf50",
+              color: "red",
               height: "18px",
               verticalAlign: "middle",
             }}

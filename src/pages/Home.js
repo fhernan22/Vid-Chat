@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -7,9 +8,6 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { useTheme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
 import { ReactComponent as DiagonalLine } from "../icons/Diagonal Line.svg";
 import { ReactComponent as Hero } from "../icons/heroChat.svg";
@@ -92,7 +90,6 @@ const Home = () => {
   return (
     <div className={classes.root}>
       <DiagonalLine style={{ position: "absolute", top: "0", zIndex: -500 }} />
-      <Navbar />
       <Container maxWidth="lg" className={classes.hero}>
         <Grid container direction={matches ? "column" : "row"} spacing={2}>
           <Grid item md={5}>
@@ -113,9 +110,11 @@ const Home = () => {
               spacing={2}
             >
               <Grid item className={classes.buttonContainer}>
-                <Button variant="contained" className={classes.primary}>
-                  Log In
-                </Button>
+                <Link to="/login">
+                  <Button variant="contained" className={classes.primary}>
+                    Log In
+                  </Button>
+                </Link>
               </Grid>
 
               <Grid item className={classes.buttonContainer}>
@@ -129,7 +128,6 @@ const Home = () => {
             <Hero className={classes.heroImage} />
           </Grid>
         </Grid>
-        <Footer />
       </Container>
     </div>
   );

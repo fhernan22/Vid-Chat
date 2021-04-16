@@ -7,8 +7,10 @@ const darkTheme = createMuiTheme({
     background: {
       default: "#1D2026",
     },
-    palette: {
-      primary: green,
+
+    primary: green,
+    secondary: {
+      main: "#1959A2",
     },
   },
 });
