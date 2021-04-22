@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router";
+
+import axios from "axios";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -9,6 +12,10 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
+import { connect } from "react-redux";
+import { signupUser } from "../redux/actions/userActions";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,10 +45,57 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: "underline",
     },
   },
+  progress: {
+    position: "absolute",
+  },
 }));
 
-const SignUpPage = () => {
+const SignUpPage = (props) => {
+  console.log(props);
+
   const classes = useStyles();
+
+  const [user, setUser] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    errors: {},
+  });
+
+  const {
+    UI: { loading },
+  } = props;
+
+  const { errors } = user;
+
+  useEffect(() => {
+    setUser({
+      ...user,
+      errors: props.UI.errors,
+    });
+  }, [props.UI.errors]);
+
+  const handleChange = (event) => {
+    setUser({
+      ...user,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const userData = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: user.password,
+    };
+
+    props.signupUser(userData, props.history);
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
@@ -51,7 +105,7 @@ const SignUpPage = () => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -64,6 +118,10 @@ const SignUpPage = () => {
                 label="First Name"
                 autoFocus
                 color="secondary"
+                value={user.firstName}
+                helperText={errors.firstName}
+                error={errors.firstName ? true : false}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -76,6 +134,10 @@ const SignUpPage = () => {
                 name="lastName"
                 autoComplete="lname"
                 color="secondary"
+                value={user.lastName}
+                helperText={errors.lastName}
+                error={errors.lastName ? true : false}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -88,6 +150,10 @@ const SignUpPage = () => {
                 name="email"
                 autoComplete="email"
                 color="secondary"
+                value={user.email}
+                helperText={errors.email}
+                error={errors.email ? true : false}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -101,17 +167,35 @@ const SignUpPage = () => {
                 id="password"
                 autoComplete="current-password"
                 color="secondary"
+                value={user.password}
+                helperText={errors.password}
+                error={errors.password ? true : false}
+                onChange={handleChange}
               />
             </Grid>
           </Grid>
+          {errors.general && (
+            <Typography
+              variant="body2"
+              color="error"
+              className={classes.customError}
+            >
+              {errors.general}
+            </Typography>
+          )}
+
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="secondary"
             className={classes.submit}
+            disabled={loading}
           >
             Sign Up
+            {loading && (
+              <CircularProgress size={30} className={classes.progress} />
+            )}
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
@@ -131,4 +215,9 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+const mapStateToProps = (state) => ({
+  user: state.user,
+  UI: state.UI,
+});
+
+export default connect(mapStateToProps, { signupUser })(SignUpPage);

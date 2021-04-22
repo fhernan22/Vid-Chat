@@ -8,9 +8,13 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 
+import { connect } from "react-redux";
+import { logoutUser } from "../redux/actions/userActions";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    alignItems: "baseline",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -27,8 +31,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = () => {
+const Navbar = (props) => {
   const classes = useStyles();
+
+  const { authenticated } = props;
 
   return (
     <div className={classes.root}>
@@ -38,9 +44,15 @@ const Navbar = () => {
             <Typography variant="h6" className={classes.title}>
               <Link to="/">VidChat</Link>
             </Typography>
-            <Link to="/login">
-              <Button color="inherit">Login</Button>
-            </Link>
+            {authenticated ? (
+              <Button color="inherit" onClick={props.logoutUser}>
+                logout
+              </Button>
+            ) : (
+              <Link to="/login">
+                <Button color="inherit">login</Button>
+              </Link>
+            )}
           </Toolbar>
         </Container>
       </AppBar>
@@ -48,4 +60,8 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+const mapStateToProps = (state) => ({
+  authenticated: state.user.authenticated,
+});
+
+export default connect(mapStateToProps, { logoutUser })(Navbar);
