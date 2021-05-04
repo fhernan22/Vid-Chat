@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 
+import { ContextProvider } from "./contexts/SocketContext";
+
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
@@ -12,6 +14,7 @@ import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import Profile from "./pages/Profile";
+import Conference from "./pages/Conference";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -44,21 +47,28 @@ if (token) {
 function App() {
   return (
     <Router>
-      <Provider store={store}>
-        <ThemeProvider theme={darkTheme}>
-          <CssBaseline />
-          <div className="App">
-            <Navbar />
-            <Switch>
-              <PublicRoute path="/" exact component={Home} />
-              <PublicRoute path="/login" exact component={LoginPage} />
-              <PublicRoute path="/signup" exact component={SignUpPage} />
-              <PrivateRoute path="/profile" exact component={Profile} />
-            </Switch>
-            <Footer />
-          </div>
-        </ThemeProvider>
-      </Provider>
+      <ContextProvider>
+        <Provider store={store}>
+          <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            <div className="App">
+              <Navbar />
+              <Switch>
+                <PublicRoute path="/" exact component={Home} />
+                <PublicRoute path="/login" exact component={LoginPage} />
+                <PublicRoute path="/signup" exact component={SignUpPage} />
+                <PrivateRoute path="/profile" exact component={Profile} />
+                <PrivateRoute
+                  path="/conference/:roomId"
+                  exact
+                  component={Conference}
+                />
+              </Switch>
+              <Footer />
+            </div>
+          </ThemeProvider>
+        </Provider>
+      </ContextProvider>
     </Router>
   );
 }
